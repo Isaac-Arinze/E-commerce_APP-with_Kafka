@@ -21,7 +21,7 @@
     <java.version>17</java.version>
   </properties>
 
-  <dependencies>
+		<dependencies>
     <!-- Mail -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
