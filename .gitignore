@@ -1,0 +1,48 @@
+# Build output
+kafka-consumer/target/
+**/target/
+*.iml
+.idea/
+.project
+.settings/
+.classpath
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+kafka-consumer/full_log.txt
+
+# Env/Secrets
+.env
+*.env
+*.env.*
+!.env.example
+
+# Maven wrapper downloads
+.mvn/wrapper/maven-wrapper.jar
+
+# Node/npm (if any)
+node_modules/
+
+# VSCode
+.vscode/
+
+# Java
+*.class
+
+# IntelliJ
+out/
+
+# Spring Boot
+*.pid
+
+# Coverage/Reports
+coverage/
+reports/
+
+# Local config overrides
+application-local.yml
+application-local.properties
