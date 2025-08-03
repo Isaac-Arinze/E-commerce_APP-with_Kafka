@@ -46,3 +46,4 @@ reports/
 # Local config overrides
 application-local.yml
 application-local.properties
+application.yml
