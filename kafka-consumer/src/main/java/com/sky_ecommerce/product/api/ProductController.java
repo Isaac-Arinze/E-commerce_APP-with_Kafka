@@ -54,17 +54,39 @@ public class ProductController {
     // Accepts text fields + one or more files in a single request
     @PostMapping(value = "/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> createMultipart(
+<<<<<<< HEAD
             @RequestPart("title") String title,
             @RequestPart(value = "description", required = false) String description,
             @RequestPart("price") BigDecimal price,
             @RequestPart("stockQty") Integer stockQty,
             @RequestPart(value = "status", required = false) String status,
             @RequestPart(value = "images", required = false) MultipartFile[] images,
+=======
+            @RequestParam("title") String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam("price") String priceStr,
+            @RequestParam("stockQty") String stockQtyStr,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
+>>>>>>> 946e534 (chore: sync with main, update configs and integration)
             Principal principal,
             @RequestHeader(value = "X-User-Id", required = false) String headerUser
     ) throws IOException {
         String sellerId = currentUserId(principal, headerUser);
 
+<<<<<<< HEAD
+=======
+        // Parse numeric values
+        BigDecimal price;
+        Integer stockQty;
+        try {
+            price = new BigDecimal(priceStr);
+            stockQty = Integer.parseInt(stockQtyStr);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid price or stockQty format"));
+        }
+
+>>>>>>> 946e534 (chore: sync with main, update configs and integration)
         Product payload = new Product()
                 .setTitle(title)
                 .setDescription(description)
@@ -73,7 +95,11 @@ public class ProductController {
 
         if (StringUtils.hasText(status)) {
             try {
+<<<<<<< HEAD
                 payload.setStatus(Product.Status.valueOf(status));
+=======
+                payload.setStatus(Product.Status.valueOf(status.toUpperCase()));
+>>>>>>> 946e534 (chore: sync with main, update configs and integration)
             } catch (IllegalArgumentException ex) {
                 payload.setStatus(Product.Status.ACTIVE);
             }
@@ -108,8 +134,25 @@ public class ProductController {
             products.create(sellerId, created);
         }
 
+<<<<<<< HEAD
         return ResponseEntity.ok(Map.of(
                 "product", created,
+=======
+        // Create a clean response without circular references
+        Map<String, Object> productData = Map.of(
+                "id", created.getId(),
+                "sellerId", created.getSellerId(),
+                "title", created.getTitle(),
+                "description", created.getDescription() != null ? created.getDescription() : "",
+                "price", created.getPrice(),
+                "stockQty", created.getStockQty(),
+                "status", created.getStatus().toString(),
+                "imageCount", created.getImages().size()
+        );
+        
+        return ResponseEntity.ok(Map.of(
+                "product", productData,
+>>>>>>> 946e534 (chore: sync with main, update configs and integration)
                 "uploadedCount", images == null ? 0 : images.length
         ));
     }
@@ -190,4 +233,8 @@ public class ProductController {
                 "url", url
         ));
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 946e534 (chore: sync with main, update configs and integration)
