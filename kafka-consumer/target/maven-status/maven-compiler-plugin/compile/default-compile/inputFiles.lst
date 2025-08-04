@@ -27,6 +27,7 @@
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/cart/domain/CartRepository.java
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/cart/service/CartService.java
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/checkout/api/CheckoutController.java
+/mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/checkout/api/PaymentController.java
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/common/EventEnvelope.java
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/common/EventEnvelopeFactory.java
 /mnt/c/Users/Staff/Downloads/kafka-consumer/kafka-consumer/src/main/java/com/sky_ecommerce/config/CloudinaryConfig.java
