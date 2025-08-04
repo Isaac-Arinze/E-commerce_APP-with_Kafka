@@ -2,29 +2,51 @@ spring:
   application:
     name: ecommerce-app
   mail:
+    # Gmail SMTP Configuration (switch to implicit SSL on 465 due to 587 connect timeouts)
     host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
+    port: 465
+    username: propertyplugsolutions@gmail.com
+    password: qzzs nima bhqu iwtw
+    default-encoding: UTF-8
+    test-connection: false
     properties:
       mail:
+        transport:
+          protocol: smtp
         smtp:
           auth: true
-          starttls:
+          # Use SSL/TLS from the start for port 465; disable STARTTLS
+          ssl:
             enable: true
+          starttls:
+            enable: false
+          # Timeouts retained for reliability (15s)
+          connectiontimeout: 15000
+          timeout: 15000
+          writetimeout: 15000
+  # H2 Database configuration (single definition)
   datasource:
     url: jdbc:h2:mem:ecommerce;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
     driver-class-name: org.h2.Driver
+    username: sa
+    password: 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+    show-sql: true
     open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   kafka:
     bootstrap-servers: localhost:9092
 
 jwt:
   issuer: sky-ecommerce
-  secret: ${JWT_SECRET}
+  # Inlined from .env
+  secret: c3e2f8a6b8d0e48dfaa0df5e21e1c10ab0deac59f723f81bd9a3b8b7e9bc1f36f50977fd181cc9a4dcd4ae1d39b61f02b42945f4ce3584f9678777a46a05a598
   access-token:
     ttl: 15m
   refresh-token:
@@ -46,8 +68,28 @@ outbox:
   relay:
     interval-ms: 1000
 
+# Frontend base URL for password reset link (from .env)
+app:
+  frontend:
+    resetBaseUrl: http://localhost:3000/reset?token=
+
 logging:
   level:
     org.apache.kafka: INFO
     org.springframework.kafka: INFO
     com.sky_ecommerce: DEBUG
+    org.springframework.mail: DEBUG
+    com.sun.mail: DEBUG
+    jakarta.mail: DEBUG
+
+cloudinary:
+  cloud-name: dw2tizec5
+  api-key: 452457823177195
+  api-secret: aXwURIPipg2iekjFjk1vigejKZc
+
+# Paystack configuration (TEST) - values inlined per request
+paystack:
+  base-url: https://api.paystack.co
+  public-key: pk_test_ba54b0b41a6925ae537b647455053dbbe6944360
+  secret-key: sk_test_5a1af0ebe3e6991b79ed180a8c4cb4e662848482
+  callback-url: https://example.com

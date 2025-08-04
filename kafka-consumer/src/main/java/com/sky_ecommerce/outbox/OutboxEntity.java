@@ -14,7 +14,8 @@ public class OutboxEntity {
     @Column(nullable = false, length = 200)
     private String topic;
 
-    @Column(nullable = false, length = 200)
+    // "key" is a reserved keyword in H2; map the column to a different name
+    @Column(name = "message_key", nullable = false, length = 200)
     private String key; // partitioning key, e.g., orderId
 
     @Lob
