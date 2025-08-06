@@ -12,13 +12,18 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import com.sky_ecommerce.product.category.domain.Category;
+import com.sky_ecommerce.product.category.domain.CategoryRepository;
+
 @Service
 public class ProductService {
 
     private final ProductRepository products;
+    private final CategoryRepository categories;
 
-    public ProductService(ProductRepository products) {
+    public ProductService(ProductRepository products, CategoryRepository categories) {
         this.products = products;
+        this.categories = categories;
     }
 
     public Product create(String sellerId, Product payload) {
@@ -26,6 +31,13 @@ public class ProductService {
         payload.setSellerId(sellerId);
         if (payload.getStatus() == null) {
             payload.setStatus(Product.Status.ACTIVE);
+        }
+        // If payload contains a transient category with only id set, resolve it
+        if (payload.getCategory() != null && payload.getCategory().getId() != null) {
+            Long cid = payload.getCategory().getId();
+            Category cat = categories.findById(cid)
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found: " + cid));
+            payload.setCategory(cat);
         }
         return products.save(payload);
     }
@@ -40,6 +52,16 @@ public class ProductService {
         if (payload.getPrice() != null) existing.setPrice(payload.getPrice());
         if (payload.getStockQty() != null) existing.setStockQty(payload.getStockQty());
         if (payload.getStatus() != null) existing.setStatus(payload.getStatus());
+        if (payload.getCategory() != null) {
+            Long cid = payload.getCategory().getId();
+            if (cid == null) {
+                existing.setCategory(null);
+            } else {
+                Category cat = categories.findById(cid)
+                        .orElseThrow(() -> new EntityNotFoundException("Category not found: " + cid));
+                existing.setCategory(cat);
+            }
+        }
         return products.save(existing);
     }
 

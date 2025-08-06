@@ -1,7 +1,6 @@
 package com.sky_ecommerce.product.api;
 
-import com.sky_ecommerce.product.domain.Product;
-import com.sky_ecommerce.product.service.ProductService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -9,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.sky_ecommerce.product.service.ProductService;
+import com.sky_ecommerce.product.domain.Product;
+import com.sky_ecommerce.product.category.domain.Category;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -60,6 +63,7 @@ public class ProductController {
             @RequestParam("stockQty") String stockQtyStr,
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "images", required = false) MultipartFile[] images,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
             Principal principal,
             @RequestHeader(value = "X-User-Id", required = false) String headerUser
     ) throws IOException {
@@ -89,6 +93,9 @@ public class ProductController {
             }
         }
 
+        if (categoryId != null) {
+            payload.setCategory(new Category().setId(categoryId));
+        }
         Product created = products.create(sellerId, payload);
 
         // Save images if provided
@@ -127,6 +134,7 @@ public class ProductController {
                 "price", created.getPrice(),
                 "stockQty", created.getStockQty(),
                 "status", created.getStatus().toString(),
+                "categoryId", created.getCategory() != null ? created.getCategory().getId() : null,
                 "imageCount", created.getImages().size()
         );
         
