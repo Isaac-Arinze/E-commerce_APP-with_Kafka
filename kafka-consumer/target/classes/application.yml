@@ -2,11 +2,10 @@ spring:
   application:
     name: ecommerce-app
   mail:
-    # Gmail SMTP Configuration (switch to implicit SSL on 465 due to 587 connect timeouts)
-    host: smtp.gmail.com
-    port: 465
-    username: propertyplugsolutions@gmail.com
-    password: qzzs nima bhqu iwtw
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     default-encoding: UTF-8
     test-connection: false
     properties:
@@ -15,20 +14,18 @@ spring:
           protocol: smtp
         smtp:
           auth: true
-          # Use SSL/TLS from the start for port 465; disable STARTTLS
           ssl:
             enable: true
           starttls:
             enable: false
-          # Timeouts retained for reliability (15s)
           connectiontimeout: 15000
           timeout: 15000
           writetimeout: 15000
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecommerce
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ecommerce}
     driver-class-name: org.postgresql.Driver
-    username: appuser
-    password: newpassword
+    username: ${DB_USERNAME:appuser}
+    password: ${DB_PASSWORD:newpassword}
   jpa:
     hibernate:
       ddl-auto: update
@@ -39,8 +36,11 @@ spring:
     show-sql: true
     open-in-view: false
   kafka:
-    bootstrap-servers: localhost:9092
-  # Multipart configuration for file uploads
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:pkc-xxxxx.us-central1.gcp.confluent.cloud:9092}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_API_KEY:HY73KJWRYPKUYWGO}" password="${KAFKA_API_SECRET:cfltDPWESa093bLUOLoRAJP+M/1uBkCZ6HmgHB+tTUXPIXYcTW/GcjF4KvqGkyCg}";
   servlet:
     multipart:
       enabled: true
@@ -49,9 +49,8 @@ spring:
       file-size-threshold: 2KB
 
 jwt:
-  issuer: sky-ecommerce
-  # Inlined from .env
-  secret: c3e2f8a6b8d0e48dfaa0df5e21e1c10ab0deac59f723f81bd9a3b8b7e9bc1f36f50977fd181cc9a4dcd4ae1d39b61f02b42945f4ce3584f9678777a46a05a598
+  issuer: ${JWT_ISSUER:sky-ecommerce}
+  secret: ${JWT_SECRET}
   access-token:
     ttl: 15m
   refresh-token:
@@ -64,19 +63,18 @@ management:
         include: health,info,metrics,prometheus
 
 topics:
-  order-events: order.events
-  payment-events: payment.events
-  inventory-events: inventory.events
-  notification-events: notification.events
+  order-events: ${ORDER_EVENTS_TOPIC:order.events}
+  payment-events: ${PAYMENT_EVENTS_TOPIC:payment.events}
+  inventory-events: ${INVENTORY_EVENTS_TOPIC:inventory.events}
+  notification-events: ${NOTIFICATION_EVENTS_TOPIC:notification.events}
 
 outbox:
   relay:
     interval-ms: 1000
 
-# Frontend base URL for password reset link (from .env)
 app:
   frontend:
-    resetBaseUrl: http://localhost:3000/reset?token=
+    resetBaseUrl: ${FRONTEND_RESET_BASE_URL:http://localhost:3000/reset?token=}
 
 logging:
   level:
@@ -88,14 +86,12 @@ logging:
     jakarta.mail: DEBUG
 
 cloudinary:
-  cloud-name: dw2tizec5
-  api-key: 452457823177195
-  api-secret: aXwURIPipg2iekjFjk1vigejKZc
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
 
-# Paystack configuration (TEST) - values inlined per request
 paystack:
-  base-url: https://api.paystack.co
-  public-key: pk_test_ba54b0b41a6925ae537b647455053dbbe6944360
-  secret-key: sk_test_5a1af0ebe3e6991b79ed180a8c4cb4e662848482
-  callback-url: https://example.com
-# Removed duplicate spring/jwt/management/topics/outbox/app/logging/cloudinary/paystack blocks below
+  base-url: ${PAYSTACK_BASE_URL:https://api.paystack.co}
+  public-key: ${PAYSTACK_PUBLIC_KEY}
+  secret-key: ${PAYSTACK_SECRET_KEY}
+  callback-url: ${PAYSTACK_CALLBACK_URL:https://example.com}
