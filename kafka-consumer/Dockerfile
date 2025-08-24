@@ -9,6 +9,6 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/kafka-consumer/target/kafka-consumer-0.0.1-SNAPSHOT.jar app.jar
 # Expose the default Spring Boot port
-EXPOSE 8080
+EXPOSE 9292
 # Use environment variables for Java options if needed
 ENTRYPOINT ["java","-jar","app.jar"]

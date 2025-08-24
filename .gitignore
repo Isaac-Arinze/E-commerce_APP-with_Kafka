@@ -6,6 +6,7 @@ kafka-consumer/target/
 .project
 .settings/
 .classpath
+.render.yaml
 
 # OS files
 .DS_Store
